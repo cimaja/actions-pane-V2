@@ -4,7 +4,6 @@ import ReactFlow, {
   Controls,
   Background,
   NodeTypes,
-  Node,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components';
@@ -12,7 +11,6 @@ import { makeStyles, shorthands, tokens } from '@fluentui/react-components';
 import { useWorkflowStore } from './store/workflow';
 import { useActionsStore } from './store/actionsStore';
 import Sidebar from './components/Sidebar';
-import PropertiesPanel from './components/PropertiesPanel';
 import TriggerNode from './components/nodes/TriggerNode';
 import ActionNode from './components/nodes/ActionNode';
 
@@ -60,7 +58,6 @@ function App() {
   const styles = useStyles();
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useWorkflowStore();
   const initializeDefaultCategories = useActionsStore(state => state.initializeDefaultCategories);
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [sidebarWidth, setSidebarWidth] = useState(340);
   const [isResizing, setIsResizing] = useState(false);
 
@@ -147,8 +144,6 @@ function App() {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onNodeClick={(_, node) => setSelectedNode(node)}
-            onPaneClick={() => setSelectedNode(null)}
             nodeTypes={nodeTypes}
             onDragOver={onDragOver}
             onDrop={onDrop}
@@ -159,7 +154,6 @@ function App() {
             <Background />
           </ReactFlow>
         </div>
-        <PropertiesPanel selectedNode={selectedNode} />
       </div>
     </div>
   );
