@@ -37,6 +37,14 @@ const DEFAULT_INSTALLED_CATEGORIES = [
   'Microsoft 365-Microsoft Teams',
   'Microsoft 365-Word Online (Business)',
   'Microsoft 365-Microsoft Forms',
+  // Azure connectors
+  'Azure-Azure OpenAI',
+  // Microsoft connectors in Third-Party Services category
+  'Third-Party Services-Azure DevOps',
+  // Third-Party Services connectors
+  'Third-Party Services-GitHub',
+  // Third-Party Services connectors
+  'Third-Party Services-Adobe Sign',
 ];
 
 export const useActionsStore = create<ActionsState>()(

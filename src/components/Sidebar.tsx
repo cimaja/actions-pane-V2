@@ -138,7 +138,63 @@ const Sidebar = () => {
 
   // Pre-fetch all the actions we might need
   const coreActions = useActions({ sourceName: 'PAD Action', installedOnly: true });
-  const appActions = useActions({ sourceName: 'Connector', installedOnly: true });
+  // Get connector actions and group them by publisher (Microsoft or Third-party)
+  const connectorActions = useActions({ sourceName: 'Connector', installedOnly: true });
+  
+  // Group connectors by publisher
+  const appActions = useMemo(() => {
+    if (connectorActions.length === 0) return [];
+    
+    // Get all modules from connector actions
+    const allModules = connectorActions.flatMap(source => 
+      source.categories.flatMap(category => category.modules)
+    );
+    
+    // Group modules by publisher
+    const microsoftModules = allModules
+      .filter(module => module.publisher === 'Microsoft')
+      .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+      
+    const thirdPartyModules = allModules
+      .filter(module => module.publisher !== 'Microsoft' && module.publisher)
+      .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+      
+    // Handle modules without a publisher (if any)
+    const unknownPublisherModules = allModules
+      .filter(module => !module.publisher)
+      .sort((a, b) => a.name.localeCompare(b.name));
+      
+    // If there are any modules without a publisher, add them to third-party
+    if (unknownPublisherModules.length > 0) {
+      thirdPartyModules.push(...unknownPublisherModules);
+    }
+    
+    // Create categories only for non-empty publisher groups
+    const categories = [];
+    
+    if (microsoftModules.length > 0) {
+      categories.push({
+        name: 'Microsoft',
+        icon: ConnectorsIcon as any,
+        modules: microsoftModules
+      });
+    }
+    
+    if (thirdPartyModules.length > 0) {
+      categories.push({
+        name: 'Third-party Services',
+        icon: ConnectorsIcon as any,
+        modules: thirdPartyModules
+      });
+    }
+    
+    // Create a new structure with publishers as categories
+    return [{
+      name: 'Connectors',
+      icon: ConnectorsIcon as any,
+      categories: categories
+    }];
+  }, [connectorActions]);
   
   // Create a structure for the Custom section that will appear in the sidebar
   const customSection = useMemo(() => {
@@ -185,7 +241,7 @@ const Sidebar = () => {
   const activeTabSections = useMemo(() => {
     if (activeNav === 'core') {
       return modifiedCoreActions;
-    } else if (activeNav === 'apps') {
+    } else if (activeNav === 'connectors') { // Changed from 'apps' to 'connectors' to match navigation tabs
       return appActions;
     } else {
       return [];
@@ -926,6 +982,12 @@ const Sidebar = () => {
     // Sort categories alphabetically if this is the Core tab
     if (activeNav === 'core') {
       groups = [...groups].sort((a, b) => a.name.localeCompare(b.name));
+      
+      // Additionally ensure that all modules within each category are also sorted alphabetically
+      groups = groups.map(group => ({
+        ...group,
+        modules: [...group.modules].sort((a, b) => a.name.localeCompare(b.name))
+      }));
     }
 
     if (groups.length === 0 && activeNav !== 'favorites') {
@@ -941,8 +1003,8 @@ const Sidebar = () => {
                 )}
               </div>
             </div>
-            <h3 className="text-sm font-medium text-gray-190 mb-1">{activeNav === 'core' ? 'No core actions installed' : `No ${activeNav === 'apps' ? 'connectors' : activeNav} installed`}</h3>
-            <p className="text-sm text-gray-130 mb-4">Install {activeNav === 'apps' ? 'connectors' : 'actions'} from the library to get started</p>
+            <h3 className="text-sm font-medium text-gray-190 mb-1">{activeNav === 'core' ? 'No core actions installed' : `No ${activeNav} installed`}</h3>
+            <p className="text-sm text-gray-130 mb-4">Install {activeNav === 'connectors' ? 'connectors' : 'actions'} from the library to get started</p>
             <button
               onClick={() => openLibraryModal()}
               className="text-sm text-[#0078d4] hover:underline"
@@ -967,18 +1029,29 @@ const Sidebar = () => {
                     // This is the most reliable approach since we know the group names
                     
                     // Core action groups (known group names for core actions)
-                    const coreGroups = ['Files', 'Interaction', 'System', 'Logic', 'Advanced'];
+                    const coreGroups = ['Files', 'Interaction', 'System', 'Logic', 'Advanced', 'Custom'];
                     
-                    // If the group name is in the list of core groups, select the core tab
-                    // Otherwise, select the connectors tab
-                    const tabToSelect: 'core' | 'connectors' = 
-                      coreGroups.includes(group.name) ? 'core' : 'connectors';
+                    // Publisher groups for connectors
+                    const publisherGroups = ['Microsoft', 'Third-party Services'];
                     
-                    console.log('See All clicked for group:', group.name, 'Setting tab to:', tabToSelect);
+                    // Determine which tab to select
+                    let tabToSelect: 'core' | 'connectors' = 'core';
+                    let categoryToSelect: string | null = null;
+                    
+                    if (coreGroups.includes(group.name)) {
+                      tabToSelect = 'core';
+                      categoryToSelect = group.name.toLowerCase();
+                    } else if (publisherGroups.includes(group.name)) {
+                      tabToSelect = 'connectors';
+                      // Convert 'Third-party Services' to 'third-party' for library modal category filter
+                      categoryToSelect = group.name === 'Third-party Services' ? 'third-party' : 'microsoft';
+                    }
+                    
+                    console.log('See All clicked for group:', group.name, 'Setting tab to:', tabToSelect, 'Category:', categoryToSelect);
                     
                     // First set the tab, then the category, then open the modal
                     setSelectedLibraryTab(tabToSelect);
-                    setSelectedLibraryCategory(group.name.toLowerCase());
+                    setSelectedLibraryCategory(categoryToSelect);
                     setIsLibraryModalOpen(true);
                   }}
                   className="text-xs text-[#0078d4] hover:underline"

@@ -46,7 +46,15 @@ export function ModuleDetails({ module, onBack, isInstalled, onInstallToggle, so
           <ArrowLeft className="w-4 h-4 text-gray-140" />
         </button>
         <div className="flex items-center gap-2 text-sm text-gray-140">
-          <span>{module.categoryName}</span>
+          {
+            sourceName === 'Connector' && module.publisher ? (
+              // For connectors, show Publisher > Connector name
+              <span>{module.publisher}</span>
+            ) : (
+              // For core actions and custom actions, keep showing category
+              <span>{module.categoryName}</span>
+            )
+          }
           <ChevronRight className="w-4 h-4" />
           <span className="font-medium text-gray-190">{module.name}</span>
         </div>
