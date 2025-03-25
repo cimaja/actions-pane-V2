@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, X, ChevronRight, Star, Clock, BookOpen, Package2, LayoutTemplate, MoveUpRight } from 'lucide-react';
+import { Search, X, ChevronRight, Star, Clock, BookOpen, Package2, LayoutTemplate, MoveUpRight, Plus } from 'lucide-react';
 import { FavoritesIcon } from './icons/FavoritesIcon';
 import { CoreIcon } from './icons/CoreIcon';
 import { ConnectorsIcon } from './icons/ConnectorsIcon';
+import { CustomActionsIcon } from './icons/CustomActionsIcon';
 import { cn } from '../lib/utils';
 import { useActions } from '../hooks/useActions';
 import { FilterDropdown } from './FilterDropdown';
@@ -100,7 +101,7 @@ const Sidebar = () => {
   const [searchActiveTab, setSearchActiveTab] = useState<'local' | 'library'>('local');
   const [librarySearchResults, setLibrarySearchResults] = useState<any[]>([]);
 
-  const { toggleFavorite, isFavorite, favoriteActions, recentActions, addToRecent, isInstalled: storeIsInstalled } = useActionsStore();
+  const { toggleFavorite, isFavorite, favoriteActions, recentActions, addToRecent, isInstalled: storeIsInstalled, installedCategories } = useActionsStore();
   
   // Function to check if an action is installed
   const isInstalled = (action: any) => {
@@ -119,11 +120,77 @@ const Sidebar = () => {
     installedOnly: true
   });
   
+  // Define the structure for custom actions
+  const customModules = useMemo(() => {
+    return installedCategories
+      .filter((cat: string) => cat.startsWith('Custom actions-'))
+      .map((cat: string) => {
+        const moduleName = cat.replace('Custom actions-', '');
+        return {
+          name: moduleName,
+          icon: Plus as any, // Cast to any to avoid type issues
+          color: 'bg-purple-100 text-purple-600',
+          description: `Custom action: ${moduleName}`,
+          submodules: [{ name: moduleName, actions: [] as any[] }]
+        };
+      });
+  }, [installedCategories]);
+
+  // Pre-fetch all the actions we might need
+  const coreActions = useActions({ sourceName: 'PAD Action', installedOnly: true });
+  const appActions = useActions({ sourceName: 'Connector', installedOnly: true });
+  
+  // Create a structure for the Custom section that will appear in the sidebar
+  const customSection = useMemo(() => {
+    // If no custom modules exist, return an empty array
+    if (customModules.length === 0) {
+      return [];
+    }
+    
+    // Return a single source with a 'Custom' category
+    return [{
+      name: 'Custom',
+      icon: CustomActionsIcon as any,
+      color: 'bg-purple-100 text-purple-600', // Purple color for custom actions as per memory
+      categories: [{
+        name: 'Custom',  // Top level category name
+        icon: CustomActionsIcon as any, // Puzzle icon for custom actions as per memory
+        color: 'bg-purple-100 text-purple-600',
+        modules: [{
+          name: 'Custom actions',  // The name that appears with chevron
+          icon: CustomActionsIcon as any, // Puzzle icon
+          color: 'bg-purple-100 text-purple-600',
+          description: 'Installed custom actions',
+          // For the second level view, create fake actions from the custom modules
+          // since real actions would come from the actual installed modules
+          actions: customModules.map(module => module.name),
+          submodules: []
+        }]
+      }]
+    }];
+  }, [customModules]);
+  
+  // Add custom section to core actions
+  const modifiedCoreActions = useMemo(() => {
+    // If no custom modules, just return the original core actions
+    if (customModules.length === 0) {
+      return coreActions;
+    }
+    
+    // Combine core actions with the custom section
+    return [...coreActions, ...customSection];
+  }, [coreActions, customSection, customModules]);
+  
   // Use the appropriate sections for the current tab view (not for search)
-  const activeTabSections = useActions({ 
-    sourceName: activeNav === 'core' ? 'PAD Action' : 'Connector',
-    installedOnly: true
-  });
+  const activeTabSections = useMemo(() => {
+    if (activeNav === 'core') {
+      return modifiedCoreActions;
+    } else if (activeNav === 'apps') {
+      return appActions;
+    } else {
+      return [];
+    }
+  }, [activeNav, modifiedCoreActions, appActions]);
 
   const clearSearch = () => {
     setSearchQuery('');
@@ -853,7 +920,13 @@ const Sidebar = () => {
     if (activeSection) return renderSecondLevel();
     if (activeNav === 'favorites') return renderFavoritesView();
 
-    const groups = activeTabSections.flatMap((source) => source.categories);
+    // Get all categories from active tab sections
+    let groups = activeTabSections.flatMap((source: any) => source.categories);
+    
+    // Sort categories alphabetically if this is the Core tab
+    if (activeNav === 'core') {
+      groups = [...groups].sort((a, b) => a.name.localeCompare(b.name));
+    }
 
     if (groups.length === 0 && activeNav !== 'favorites') {
       return (
@@ -916,7 +989,8 @@ const Sidebar = () => {
             </div>
             <div className="bg-white rounded-lg overflow-hidden p-2">
               <div>
-                {group.modules.map((module: any) => (
+                {/* Sort modules alphabetically by name if this is the Core tab */}
+                {(activeNav === 'core' ? [...group.modules].sort((a, b) => a.name.localeCompare(b.name)) : group.modules).map((module: any) => (
                   <div key={module.name}>
                     <button
                       className="w-full flex items-center gap-2 pl-2 pr-2 py-1.5 hover:bg-gray-20 transition-colors rounded-md"
