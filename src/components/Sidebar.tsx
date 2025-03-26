@@ -120,6 +120,9 @@ const Sidebar = () => {
     installedOnly: true
   });
   
+  // Get all action sources (both core and connectors) for looking up favorites info
+  const allActionSources = useMemo(() => [...coreSections, ...connectorSections], [coreSections, connectorSections]);
+  
   // Define the structure for custom actions
   const customModules = useMemo(() => {
     return installedCategories
@@ -353,6 +356,50 @@ const Sidebar = () => {
     );
   };
 
+  // Helper to find action's full information including category/module
+  const findActionInfo = (actionId: string) => {
+    // First check in the custom actions section which has a special structure
+    if (customSection.length > 0) {
+      const customSource = customSection[0];
+      const customCategory = customSource.categories[0];
+      const customModule = customCategory.modules[0];
+      
+      // Check if this actionId is part of the custom actions
+      // @ts-ignore - Custom module has an actions array that's not in the type definition
+      const customActions = customModule.actions || [];
+      if (customActions.includes(actionId)) {
+        return {
+          source: customSource,
+          category: customCategory,
+          module: customModule,
+          action: actionId
+        };
+      }
+    }
+    
+    // Then search in regular action sources (core and connectors)
+    for (const source of allActionSources) {
+      for (const category of source.categories) {
+        for (const module of category.modules) {
+          // Check each submodule for the action
+          for (const submodule of module.submodules) {
+            if (submodule.actions.includes(actionId)) {
+              return {
+                source,
+                category,
+                module,
+                submodule,
+                action: actionId
+              };
+            }
+          }
+        }
+      }
+    }
+    
+    return null;
+  };
+
   const renderFavoritesView = () => {
     if (favoriteActions.length === 0) {
       return (
@@ -381,24 +428,74 @@ const Sidebar = () => {
       );
     }
 
+    // Process favorites and group them directly by module
+    const moduleGroups: Record<string, {moduleInfo: any; actions: string[]}> = {};
+    
+    // Go through each favorite action and find its module
+    favoriteActions.forEach(actionId => {
+      const actionInfo = findActionInfo(actionId);
+      if (actionInfo) {
+        const { module, action } = actionInfo;
+        const moduleKey = module.name;
+        
+        // Initialize module if it doesn't exist
+        if (!moduleGroups[moduleKey]) {
+          moduleGroups[moduleKey] = {
+            moduleInfo: module,
+            actions: []
+          };
+        }
+        
+        // Add action to its module
+        moduleGroups[moduleKey].actions.push(action);
+      }
+    });
+
+    // Get modules and sort them alphabetically
+    const moduleNames = Object.keys(moduleGroups).sort();
+    
     return (
       <div className="flex-1 overflow-y-auto bg-[#fafafa] px-3">
         {renderRecentActions()}
-        <div className="relative">
-          <div className="sticky top-0 z-10 bg-[#fafafa]">
-            <div className="flex items-center justify-between py-2">
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-gray-110" />
-                <span className="text-sm font-semibold text-gray-190">Favorites</span>
+        
+        {moduleNames.map(moduleName => {
+          const moduleData = moduleGroups[moduleName];
+          const moduleInfo = moduleData.moduleInfo;
+          const actions = moduleData.actions;
+          
+          return (
+            <div key={moduleName} className="mb-4">
+              <div className="sticky top-0 z-10 bg-[#fafafa]">
+                <div className="flex items-center justify-between py-2" data-component-name="Sidebar">
+                  <div className="flex items-center gap-2">
+                    {moduleInfo && (
+                      moduleInfo.publisher ? (
+                        // For connectors, use the connector icon component with original logo
+                        <ConnectorIcon 
+                          name={moduleName} 
+                          color={moduleInfo.color || 'bg-gray-100 text-gray-600'} 
+                          icon={moduleInfo.icon} 
+                        />
+                      ) : (
+                        // For core and custom actions, use the colored background with icon
+                        <div className={`p-1 rounded-md flex items-center justify-center ${moduleInfo.color || 'bg-gray-100 text-gray-600'}`} style={{ width: '24px', height: '24px' }} data-component-name="Sidebar">
+                          <moduleInfo.icon className="w-4 h-4" />
+                        </div>
+                      )
+                    )}
+                    <span className="text-sm font-semibold text-gray-190">{moduleName}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-lg overflow-hidden p-2 mb-2">
+                <div className="space-y-1">
+                  {actions.map(renderActionItem)}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="bg-white rounded-lg overflow-hidden p-2">
-            <div className="space-y-1">
-              {favoriteActions.map(renderActionItem)}
-            </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
     );
   };

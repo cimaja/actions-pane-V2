@@ -27,8 +27,9 @@ export const LadybugNotification: React.FC = () => {
     <>
       {/* Floating Ladybug Icon */}
       <div 
-        className="fixed right-4 bottom-20 z-50 cursor-pointer"
+        className="fixed right-4 bottom-[54px] z-[9999] cursor-pointer"
         onClick={togglePane}
+        style={{ pointerEvents: 'auto' }}
       >
         <div className="bg-red-500 hover:bg-red-600 transition-colors rounded-full p-3 shadow-lg">
           <Bug className="h-6 w-6 text-white" />
@@ -61,40 +62,71 @@ export const LadybugNotification: React.FC = () => {
             </button>
           </div>
           
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">Reset local storage</h3>
-            <p className="text-sm text-gray-600 mb-2">Reset installed actions, favorites and recents</p>
+          <div className="mb-3 p-3 bg-white rounded-lg border border-gray-200">
+            <h3 className="text-sm font-semibold mb-1 text-gray-800">Reset local storage</h3>
+            <p className="text-xs text-gray-600 mb-1">Reset installed actions, favorites and recents</p>
             <ResetConnectors />
           </div>
 
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">Debug Library View</h3>
-            <p className="text-sm text-gray-600 mb-2">Open the library in debug mode</p>
+          <div className="mb-3 p-3 bg-white rounded-lg border border-gray-200">
+            <h3 className="text-sm font-semibold mb-1 text-gray-800">Debug Library View</h3>
+            <p className="text-xs text-gray-600 mb-1">Open the library in debug mode</p>
             <button
               onClick={toggleDebugLibrary}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors"
+              className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
             >
               {isDebugLibraryOpen ? 'Close Debug View' : 'Open Debug Library View'}
             </button>
           </div>
 
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">Debug Templates View</h3>
-            <p className="text-sm text-gray-600 mb-2">Open the templates modal in debug mode</p>
+          <div className="mb-3 p-3 bg-white rounded-lg border border-gray-200">
+            <h3 className="text-sm font-semibold mb-1 text-gray-800">Debug Templates View</h3>
+            <p className="text-xs text-gray-600 mb-1">Open the templates modal in debug mode</p>
             <button
               onClick={toggleDebugTemplates}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors"
+              className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
             >
               {isDebugTemplatesOpen ? 'Close Templates View' : 'Open Debug Templates View'}
             </button>
           </div>
 
-          <div className="mb-4" data-component-name="LadybugNotification">
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">What's New</h3>
-            <p className="text-sm text-gray-600 mb-2">Latest updates and improvements</p>
+          <div className="mb-3 p-3 bg-white rounded-lg border border-gray-200" data-component-name="LadybugNotification">
+            <h3 className="text-sm font-semibold mb-1 text-gray-800">What's New</h3>
+            <p className="text-xs text-gray-600 mb-1">Latest updates and improvements</p>
             <div data-component-name="LadybugNotification">
-              {/* Version 2.4.0 - Current */}
-              <div className="bg-gray-50 rounded-md p-3 border border-gray-100 mb-3">
+              {/* Version 2.5.0 - Current */}
+              <div className="bg-white py-3 mb-3">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm font-semibold text-gray-800">Version 2.5.0</p>
+                  <p className="text-xs text-gray-500">March 26, 2025</p>
+                </div>
+                <div className="mb-3">
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                    <p className="text-sm font-medium text-gray-800">Favorites Display</p>
+                  </div>
+                  <p className="text-xs text-gray-600 ml-4">Improved favorites view to display each module with its specific name and proper icon</p>
+                </div>
+                <div className="mb-3">
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                    <p className="text-sm font-medium text-gray-800">Custom Actions</p>
+                  </div>
+                  <p className="text-xs text-gray-600 ml-4">Fixed custom actions appearing in sidebar and added support for favoriting custom actions</p>
+                </div>
+                <div className="mb-3">
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                    <p className="text-sm font-medium text-gray-800">Connector Images</p>
+                  </div>
+                  <p className="text-xs text-gray-600 ml-4">Fixed image loading for all connectors with improved fallbacks and consistent display</p>
+                </div>
+
+
+              </div>
+              
+              {/* Version 2.4.0 */}
+              <div className="bg-white py-3 mb-3">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-semibold text-gray-800">Version 2.4.0</p>
                   <p className="text-xs text-gray-500">March 25, 2025</p>
@@ -122,37 +154,17 @@ export const LadybugNotification: React.FC = () => {
                 </div>
               </div>
               
-              {/* Version 2.3.2 */}
-              <div className="bg-gray-50 rounded-md p-3 border border-gray-100 mb-3" data-component-name="LadybugNotification">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-semibold text-gray-800">Version 2.3.2</p>
-                  <p className="text-xs text-gray-500">March 18, 2025</p>
-                </div>
-                <div className="mb-3" data-component-name="LadybugNotification">
-                  <div className="flex items-center" data-component-name="LadybugNotification">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 mr-2" data-component-name="LadybugNotification"></div>
-                    <p className="text-sm font-medium text-gray-800" data-component-name="LadybugNotification">Search Behavior</p>
-                  </div>
-                  <p className="text-xs text-gray-600 ml-4" data-component-name="LadybugNotification">Improved search with real-time filtering and better keyword matching</p>
-                </div>
-                <div data-component-name="LadybugNotification">
-                  <div className="flex items-center" data-component-name="LadybugNotification">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 mr-2" data-component-name="LadybugNotification"></div>
-                    <p className="text-sm font-medium text-gray-800" data-component-name="LadybugNotification">Library Behavior</p>
-                  </div>
-                  <p className="text-xs text-gray-600 ml-4" data-component-name="LadybugNotification">Improved library layout and one-click connector installation process</p>
-                </div>
-              </div>
+
               
               {/* Version 2.3.0 */}
-              <div className="bg-gray-50 rounded-md p-3 border border-gray-100 mb-3">
+              <div className="bg-white py-3 mb-3">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-semibold text-gray-800">Version 2.3.0</p>
                   <p className="text-xs text-gray-500">March 4, 2025</p>
                 </div>
                 <div className="mb-3">
                   <div className="flex items-center">
-                    <div className="w-2 h-2 rounded-full bg-purple-500 mr-2"></div>
+                    <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
                     <p className="text-sm font-medium text-gray-800">New Feature</p>
                   </div>
                   <p className="text-xs text-gray-600 ml-4">Added support for custom action categories</p>
@@ -167,7 +179,7 @@ export const LadybugNotification: React.FC = () => {
               </div>
               
               {/* Version 2.2.5 */}
-              <div className="bg-gray-50 rounded-md p-3 border border-gray-100" data-component-name="LadybugNotification">
+              <div className="bg-white py-3 mb-3" data-component-name="LadybugNotification">
                 <div className="flex items-center justify-between mb-2" data-component-name="LadybugNotification">
                   <p className="text-sm font-semibold text-gray-800">Version 2.2.5</p>
                   <p className="text-xs text-gray-500" data-component-name="LadybugNotification">February 25, 2025</p>
