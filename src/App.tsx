@@ -14,6 +14,7 @@ import Sidebar from './components/Sidebar';
 import TriggerNode from './components/nodes/TriggerNode';
 import ActionNode from './components/nodes/ActionNode';
 import LadybugNotification from './components/LadybugNotification';
+import PasswordProtection from './components/PasswordProtection';
 
 const useStyles = makeStyles({
   root: {
@@ -126,38 +127,40 @@ function App() {
   }, [resize, stopResizing]);
 
   return (
-    <div className={styles.root}>
-      <div 
-        className={styles.sidebarContainer}
-        style={{ width: sidebarWidth }}
-      >
-        <Sidebar />
-        <div
-          className={styles.resizeHandle}
-          onMouseDown={startResizing}
-        />
-      </div>
-      <div className={styles.mainContent}>
-        <div className={styles.flowContainer}>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            nodeTypes={nodeTypes}
-            onDragOver={onDragOver}
-            onDrop={onDrop}
-            fitView
-          >
-            <Controls />
-            <MiniMap />
-            <Background />
-          </ReactFlow>
+    <PasswordProtection password="actions2025">
+      <div className={styles.root}>
+        <div 
+          className={styles.sidebarContainer}
+          style={{ width: sidebarWidth }}
+        >
+          <Sidebar />
+          <div
+            className={styles.resizeHandle}
+            onMouseDown={startResizing}
+          />
         </div>
+        <div className={styles.mainContent}>
+          <div className={styles.flowContainer}>
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              nodeTypes={nodeTypes}
+              onDragOver={onDragOver}
+              onDrop={onDrop}
+              fitView
+            >
+              <Controls />
+              <MiniMap />
+              <Background />
+            </ReactFlow>
+          </div>
+        </div>
+        <LadybugNotification />
       </div>
-      <LadybugNotification />
-    </div>
+    </PasswordProtection>
   );
 }
 
