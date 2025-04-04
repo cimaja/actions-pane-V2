@@ -13,6 +13,7 @@ import { useActionsStore } from './store/actionsStore';
 import Sidebar from './components/Sidebar';
 import TriggerNode from './components/nodes/TriggerNode';
 import ActionNode from './components/nodes/ActionNode';
+import LadybugNotification from './components/LadybugNotification';
 
 const useStyles = makeStyles({
   root: {
@@ -155,6 +156,7 @@ function App() {
           </ReactFlow>
         </div>
       </div>
+      <LadybugNotification />
     </div>
   );
 }

@@ -17,7 +17,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@fluentui/react-components": "^9.46.3",
-    "@fluentui/react-icons": "^2.0.232",
+    "@fluentui/react-icons": "^2.0.294",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.344.0",

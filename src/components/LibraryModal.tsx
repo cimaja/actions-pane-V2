@@ -3,7 +3,8 @@ import { Search, X, ChevronDown, X as CloseIcon, Maximize2, Minimize2, Check, Pl
 
 import CustomActionsIcon from './icons/CustomActionsIcon';
 import UICollectionsIcon from './icons/UICollectionsIcon';
-import { getConnectorLogoUrl } from '../data/connectorLogos';
+import { ConnectorLogo } from './shared/ConnectorLogo';
+import { ActionIcon } from './shared/ActionIcon';
 import { cn } from '../lib/utils';
 import { useActions } from '../hooks/useActions';
 import { useActionsStore } from '../store/actionsStore';
@@ -11,40 +12,7 @@ import { ModuleDetails } from './ModuleDetails';
 import type { ModuleWithCategory } from '../types/library';
 import { mainNavItems } from '../data/navigation';
 
-// ConnectorLogo component for handling connector logos
-interface ConnectorLogoProps {
-  name: string;
-}
-
-const ConnectorLogo: React.FC<ConnectorLogoProps> = ({ name }) => {
-  const [hasError, setHasError] = useState(false);
-  
-  // Get the connector logo URL (now always returns a valid URL)
-  const logoUrl = getConnectorLogoUrl(name);
-  
-  // Debug logging
-  console.log(`LibraryModal ConnectorLogo for '${name}', URL: ${logoUrl}`);
-  
-  return (
-    <div className="flex-shrink-0 w-7 h-7 overflow-hidden rounded-lg flex items-center justify-center bg-white">
-      {!hasError ? (
-        <img 
-          src={logoUrl} 
-          alt={`${name} logo`} 
-          className="w-full h-full object-contain"
-          onError={() => {
-            console.error(`Image load error for connector: ${name}, URL: ${logoUrl}`);
-            setHasError(true);
-          }}
-        />
-      ) : (
-        <div className="w-7 h-7 flex items-center justify-center bg-gray-100 rounded-lg text-gray-500 text-xs font-medium">
-          {name.substring(0, 2)}
-        </div>
-      )}
-    </div>
-  );
-};
+// Using the standardized ConnectorLogo component from shared
 
 interface LibraryModalProps {
   isOpen: boolean;
@@ -712,14 +680,12 @@ const LibraryModal = ({ isOpen, onClose, initialCategory, initialTab = 'core' }:
                       >
                         <div className="px-3 py-2 flex items-center gap-3">
                           {activeTab === 'connectors' ? (
-                            <ConnectorLogo name={module.name} />
+                            <ConnectorLogo name={module.name} size="medium" />
                           ) : (
-                            <div className={cn(
-                              "flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-colors",
-                              module.color
-                            )}>
-                              <module.icon className="w-4 h-4" />
-                            </div>
+                            <ActionIcon 
+                              module={module}
+                              size="medium"
+                            />
                           )}
                           
                           <div className="min-w-0 flex-1">
@@ -781,14 +747,12 @@ const LibraryModal = ({ isOpen, onClose, initialCategory, initialTab = 'core' }:
                               <div className="px-3 py-2 flex items-center gap-3">
                                 {/* Always use ConnectorLogo for connectors */}
                                 {activeTab === 'connectors' ? (
-                                  <ConnectorLogo name={module.name} />
+                                  <ConnectorLogo name={module.name} size="medium" />
                                 ) : (
-                                  <div className={cn(
-                                    "flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-colors",
-                                    module.color
-                                  )}>
-                                    <module.icon className="w-4 h-4" />
-                                  </div>
+                                  <ActionIcon 
+                                    module={module}
+                                    size="medium"
+                                  />
                                 )}
                                 
                                 <div className="min-w-0 flex-1">

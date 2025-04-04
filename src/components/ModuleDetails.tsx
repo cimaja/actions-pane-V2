@@ -2,7 +2,8 @@
 import { ArrowLeft, ChevronRight, Check, Building2, Tag, Clock, HardDrive, User } from 'lucide-react';
 import { cn } from '../lib/utils';
 import type { ModuleWithCategory } from '../types/library';
-import { getConnectorLogoUrl } from '../data/connectorLogos';
+import { ConnectorLogo } from './shared/ConnectorLogo';
+import { ActionIcon } from './shared/ActionIcon';
 import CustomActionsIcon from './icons/CustomActionsIcon';
 
 interface ModuleDetailsProps {
@@ -73,27 +74,16 @@ export function ModuleDetails({ module, onBack, isInstalled, onInstallToggle, so
                   module.color || "bg-purple-100 text-purple-600" // Ensure purple color for custom actions
                 )}>
                   {/* ALWAYS use puzzle icon for custom actions - check multiple properties that could indicate a custom action */}
-                  {(isCustomAction || module.name === "Format JSON" || module.categoryName === "Custom") ? (
-                    <CustomActionsIcon className="w-10 h-10" />
-                  ) : sourceName === 'Connector' ? (
-                    <div className="w-full h-full overflow-hidden flex items-center justify-center rounded-xl">
-                      <img 
-                        src={getConnectorLogoUrl(module.name)} 
-                        alt={`${module.name} logo`} 
-                        className="w-full h-full object-contain"
-                        onError={(e) => {
-                          // Fallback to the icon if the image fails to load
-                          e.currentTarget.style.display = 'none';
-                          const fallbackIcon = document.getElementById(`fallback-icon-${module.name}`);
-                          if (fallbackIcon) fallbackIcon.style.display = 'block';
-                        }}
-                      />
-                      <div id={`fallback-icon-${module.name}`} style={{display: 'none'}}>
-                        <module.icon className="w-10 h-10" />
-                      </div>
-                    </div>
+                  {sourceName === 'Connector' ? (
+                    <ConnectorLogo 
+                      name={module.name} 
+                      size="large"
+                    />
                   ) : (
-                    <module.icon className="w-10 h-10" />
+                    <ActionIcon 
+                      module={module}
+                      size="large"
+                    />
                   )}
                 </div>
                 

@@ -4,7 +4,9 @@
  */
 
 // Base URL for local connector icons
-const MS_CONNECTOR_ICON_BASE = '/images/connectors';
+// Include the base path for development and production
+const BASE_PATH = import.meta.env.BASE_URL || '/';
+const MS_CONNECTOR_ICON_BASE = `${BASE_PATH}images/connectors`;
 
 // Map of connector names to their icon paths
 // Format: 'connector-name': '/path/to/icon.png'
@@ -17,7 +19,7 @@ export const connectorLogoMap: Record<string, string> = {
   'Microsoft Teams': '/Microsoft Teams.png',
   'Word Online (Business)': '/Word Online (Business).png',
   'OneNote': '/OneNote (Business).png',
-  'Planner': '/Panner.png', // Note: There's a typo in the filename (Panner instead of Planner)
+  'Planner': '/Planner.png',
   'Power BI': '/Power BI.png',
   'Microsoft Forms': '/Microsoft Forms.png',
   'Microsoft To Do': '/Microsoft To-Do (Business).png',

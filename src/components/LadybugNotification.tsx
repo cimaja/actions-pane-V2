@@ -94,7 +94,29 @@ export const LadybugNotification: React.FC = () => {
             <h3 className="text-sm font-semibold mb-1 text-gray-800">What's New</h3>
             <p className="text-xs text-gray-600 mb-1">Latest updates and improvements</p>
             <div data-component-name="LadybugNotification">
-              {/* Version 2.5.0 - Current */}
+              {/* Version 2.6.0 - Current */}
+              <div className="bg-white py-3 mb-3">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm font-semibold text-gray-800">Version 2.6.0</p>
+                  <p className="text-xs text-gray-500">April 4, 2025</p>
+                </div>
+                <div className="mb-3">
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                    <p className="text-sm font-medium text-gray-800">Icon System Overhaul</p>
+                  </div>
+                  <p className="text-xs text-gray-600 ml-4">Replaced all Lucide icons with Fluent UI icons for a consistent visual experience</p>
+                </div>
+                <div className="mb-3">
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                    <p className="text-sm font-medium text-gray-800">Improved Maintainability</p>
+                  </div>
+                  <p className="text-xs text-gray-600 ml-4">Simplified icon management by using a single icon library throughout the application</p>
+                </div>
+              </div>
+              
+              {/* Version 2.5.0 */}
               <div className="bg-white py-3 mb-3">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-semibold text-gray-800">Version 2.5.0</p>

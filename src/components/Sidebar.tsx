@@ -11,79 +11,12 @@ import { mainNavItems } from '../data/navigation';
 import { TemplatesModal } from './TemplatesModal';
 import LibraryModal from './LibraryModal';
 import { useActionsStore } from '../store/actionsStore';
-import { getConnectorLogoUrl } from '../data/connectorLogos';
+import { ConnectorLogo } from './shared/ConnectorLogo';
+import { ActionIcon } from './shared/ActionIcon';
 
-// Connector icon component for reuse throughout the sidebar
-const ConnectorIcon = ({ name, color, icon: Icon }: { name: string, color: string, icon: any }) => {
-  const [imageError, setImageError] = useState(false);
-  
-  return (
-    <div className={cn(
-      "flex-shrink-0 rounded-md flex items-center justify-center",
-      !imageError ? "bg-white" : color
-    )} style={{ width: '24px', height: '24px' }}>
-      {!imageError ? (
-        <img 
-          src={getConnectorLogoUrl(name)} 
-          alt={`${name} logo`} 
-          className="w-6 h-6 object-contain rounded-md"
-          onError={() => setImageError(true)}
-        />
-      ) : (
-        <div className="p-1 rounded-md flex items-center justify-center">
-          <Icon className="w-4 h-4" />
-        </div>
-      )}
-    </div>
-  );
-};
+// Using the standardized ConnectorLogo component from shared
 
-// ConnectorLogo component for handling connector logos in search results
-interface ConnectorLogoProps {
-  name: string;
-  color?: string;
-  fallbackIcon?: React.ReactNode;
-}
-
-const ConnectorLogo: React.FC<ConnectorLogoProps> = ({ 
-  name, 
-  color = "bg-white", 
-  fallbackIcon = <ConnectorsIcon className="w-4 h-4 text-gray-110" />
-}) => {
-  const [imageError, setImageError] = useState(false);
-  
-  const handleImageError = () => {
-    setImageError(true);
-  };
-  
-  const handleImageLoad = () => {
-    setImageError(false);
-  };
-  
-  // Get the connector logo URL
-  const logoUrl = getConnectorLogoUrl(name);
-  
-  return (
-    <div className={cn(
-      "flex-shrink-0 rounded-md flex items-center justify-center transition-colors",
-      imageError ? color : "bg-white"
-    )} style={{ width: '24px', height: '24px' }}>
-      {!imageError ? (
-        <img 
-          src={logoUrl} 
-          alt={`${name} logo`} 
-          className="w-6 h-6 object-contain rounded-md"
-          onError={handleImageError}
-          onLoad={handleImageLoad}
-        />
-      ) : (
-        <div className="p-1 rounded-md flex items-center justify-center">
-          {fallbackIcon}
-        </div>
-      )}
-    </div>
-  );
-};
+// Using the standardized ConnectorLogo component from shared
 
 const Sidebar = () => {
   const [activeNav, setActiveNav] = useState('core');
@@ -356,6 +289,16 @@ const Sidebar = () => {
     );
   };
 
+  // Helper to safely get module name as string
+  const getModuleNameAsString = (moduleValue: any): string => {
+    if (typeof moduleValue === 'string') {
+      return moduleValue;
+    } else if (typeof moduleValue === 'object' && moduleValue && moduleValue.name) {
+      return moduleValue.name;
+    }
+    return '';
+  };
+  
   // Helper to find action's full information including category/module
   const findActionInfo = (actionId: string) => {
     // First check in the custom actions section which has a special structure
@@ -440,8 +383,14 @@ const Sidebar = () => {
         
         // Initialize module if it doesn't exist
         if (!moduleGroups[moduleKey]) {
+          // Add categoryName to the module for consistent color handling
+          const enhancedModule = {
+            ...module,
+            categoryName: actionInfo.category?.name // Add category name from the action info
+          };
+          
           moduleGroups[moduleKey] = {
-            moduleInfo: module,
+            moduleInfo: enhancedModule,
             actions: []
           };
         }
@@ -471,16 +420,16 @@ const Sidebar = () => {
                     {moduleInfo && (
                       moduleInfo.publisher ? (
                         // For connectors, use the connector icon component with original logo
-                        <ConnectorIcon 
+                        <ConnectorLogo 
                           name={moduleName} 
-                          color={moduleInfo.color || 'bg-gray-100 text-gray-600'} 
-                          icon={moduleInfo.icon} 
+                          size="small"
                         />
                       ) : (
                         // For core and custom actions, use the colored background with icon
-                        <div className={`p-1 rounded-md flex items-center justify-center ${moduleInfo.color || 'bg-gray-100 text-gray-600'}`} style={{ width: '24px', height: '24px' }} data-component-name="Sidebar">
-                          <moduleInfo.icon className="w-4 h-4" />
-                        </div>
+                        <ActionIcon 
+                          module={moduleInfo}
+                          size="small"
+                        />
                       )
                     )}
                     <span className="text-sm font-semibold text-gray-190">{moduleName}</span>
@@ -646,7 +595,8 @@ const Sidebar = () => {
   type LibrarySearchResult = {
     name: string;
     description: string;
-    category: 'Core' | 'Connectors';
+    type: 'Core' | 'Connectors'; // The type of the module (Core or Connectors)
+    category: string; // The specific category name (Files, Interaction, System, etc.)
     icon?: any;
     color?: string;
     premium?: boolean;
@@ -672,34 +622,28 @@ const Sidebar = () => {
               module.name.toLowerCase().includes(query) ||
               (module.description && module.description.toLowerCase().includes(query))
             ) {
+              // Get the category name for the color scheme
+              // Files, Interaction, System, Logic, Advanced, Custom actions, UI collections
+              let categoryForColor = category.name;
+              
+              // Handle special cases for custom actions
+              if (module.name === 'Format JSON' || categoryForColor.toLowerCase().includes('custom')) {
+                categoryForColor = 'Custom actions';
+              }
+              
               results.push({
                 name: module.name,
                 description: module.description || `${module.name} actions`,
-                category: 'Core',
+                type: 'Core', // Specify the type as 'Core'
+                category: categoryForColor, // Use the standardized category name for color scheme
                 icon: module.icon,
                 color: module.color,
                 module: module
               });
             }
             
-            // Check submodules and actions
-            module.submodules.forEach(submodule => {
-              // Check if any action matches the query
-              const matchingActions = submodule.actions.filter(action =>
-                action.toLowerCase().includes(query)
-              );
-              
-              if (matchingActions.length > 0 && !results.some(r => r.name === module.name && r.category === 'Core')) {
-                results.push({
-                  name: module.name,
-                  description: module.description || `${module.name} actions`,
-                  category: 'Core',
-                  icon: module.icon,
-                  color: module.color,
-                  module: module
-                });
-              }
-            });
+            // In a real app, we wouldn't search actions until the module is installed
+            // So we're only searching on module names and descriptions
           });
         });
       });
@@ -716,45 +660,33 @@ const Sidebar = () => {
               results.push({
                 name: module.name,
                 description: module.description || `${module.name} connector`,
-                category: 'Connectors',
+                type: 'Connectors', // Specify the type as 'Connectors'
+                category: 'Connectors', // Use 'Connectors' as the category for connectors
                 color: module.color,
                 premium: module.name.includes('Premium'),
                 module: module
               });
             }
             
-            // Check submodules and actions
-            module.submodules.forEach(submodule => {
-              // Check if any action matches the query
-              const matchingActions = submodule.actions.filter(action =>
-                action.toLowerCase().includes(query)
-              );
-              
-              if (matchingActions.length > 0 && !results.some(r => r.name === module.name && r.category === 'Connectors')) {
-                results.push({
-                  name: module.name,
-                  description: module.description || `${module.name} connector`,
-                  category: 'Connectors',
-                  color: module.color,
-                  premium: module.name.includes('Premium'),
-                  module: module
-                });
-              }
-            });
+            // In a real app, we wouldn't search actions until the connector is installed
+            // So we're only searching on connector names and descriptions
           });
         });
       });
       
-      // Sort results alphabetically by name within each category
+      // Sort results alphabetically by name within each type
       results.sort((a, b) => {
-        // First sort by category
-        if (a.category !== b.category) {
-          const categoryOrder = ['Core', 'Connectors'];
-          return categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
+        // First sort by type (Core vs Connectors)
+        if (a.type !== b.type) {
+          const typeOrder = ['Core', 'Connectors'];
+          return typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
         }
         // Then sort by name
         return a.name.localeCompare(b.name);
       });
+      
+      // Debug: Log the search results to see what's being found
+      console.log('Library search results:', results);
       
       setLibrarySearchResults(results);
     } else {
@@ -788,13 +720,16 @@ const Sidebar = () => {
         );
       }
       
-      // Group results by category
+      // Group results by category, ensuring connectors are under a dedicated 'Connectors' category
       const groupedResults: {[key: string]: any[]} = {};
       filteredLocalResults.forEach(result => {
-        if (!groupedResults[result.category]) {
-          groupedResults[result.category] = [];
+        // Determine the display category - use 'Connectors' for all connector results
+        const displayCategory = result.source === 'Connector' ? 'Connectors' : result.category;
+        
+        if (!groupedResults[displayCategory]) {
+          groupedResults[displayCategory] = [];
         }
-        groupedResults[result.category].push(result);
+        groupedResults[displayCategory].push(result);
       });
       
       // Define category icons for local search
@@ -848,16 +783,10 @@ const Sidebar = () => {
                             )}
                           </div>
                           <div className="flex gap-2 items-center">
-                                <div className="flex-shrink-0 rounded-md flex items-center justify-center bg-white" style={{ width: '24px', height: '24px' }}>
-                              <img 
-                                src={getConnectorLogoUrl(result.module)} 
-                                alt={`${result.module} logo`} 
-                                className="w-6 h-6 object-contain rounded-md"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = 'none';
-                                }}
-                              />
-                            </div>
+                                <ConnectorLogo 
+                              name={getModuleNameAsString(result.module)} 
+                              size="small"
+                            />
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1.5">
                                 <h3 className="text-sm font-medium text-gray-900 truncate">
@@ -865,7 +794,7 @@ const Sidebar = () => {
                                 </h3>
                               </div>
                               <p className="text-xs leading-tight text-gray-500 mt-0 truncate text-left">
-                                {result.module}
+                                {getModuleNameAsString(result.module)}
                                 {result.module && result.description && ' › '}
                                 {result.description}
                               </p>
@@ -877,9 +806,15 @@ const Sidebar = () => {
                         </div>
                       ) : (
                         <div className="flex gap-2 items-center">
-                          <div className={cn("p-1 rounded-md flex-shrink-0 flex items-center justify-center", result.color)} style={{ width: '24px', height: '24px' }}>
-                            <result.icon className="w-4 h-4" />
-                          </div>
+                          <ActionIcon 
+                            module={{
+                              name: result.name,
+                              icon: result.icon,
+                              color: result.color,
+                              categoryName: result.category
+                            }}
+                            size="small"
+                          />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
                               <h3 className="text-sm font-medium text-gray-900 truncate">
@@ -896,7 +831,7 @@ const Sidebar = () => {
                               )}
                             </div>
                             <p className="text-xs leading-tight text-gray-500 mt-0 truncate text-left">
-                              {result.module}
+                              {getModuleNameAsString(result.module)}
                               {result.module && result.description && ' › '}
                               {result.description}
                             </p>
@@ -957,37 +892,37 @@ const Sidebar = () => {
         );
       }
       
-      // Group results by category
+      // Group results by type (Core vs Connectors) instead of category
       const groupedResults: { [key: string]: LibrarySearchResult[] } = {};
       
       librarySearchResults.forEach(result => {
-        if (!groupedResults[result.category]) {
-          groupedResults[result.category] = [];
+        if (!groupedResults[result.type]) {
+          groupedResults[result.type] = [];
         }
-        groupedResults[result.category].push(result);
+        groupedResults[result.type].push(result);
       });
       
-      // Define category icons
-      const categoryIcons = {
+      // Define type icons
+      const typeIcons = {
         'Core': <CoreIcon className="w-4 h-4 text-gray-110" />,
         'Connectors': <ConnectorsIcon className="w-4 h-4 text-gray-110" />
       };
       
-      // Category order
-      const categoryOrder = ['Core', 'Connectors'];
+      // Type order
+      const typeOrder = ['Core', 'Connectors'];
       
       return (
         <div className="flex-1 overflow-y-auto bg-[#fafafa] px-3">
-          {categoryOrder.map(category => {
-            const results = groupedResults[category];
+          {typeOrder.map(type => {
+            const results = groupedResults[type];
             if (!results || results.length === 0) return null;
             
             return (
-              <div key={category} className="relative mb-6">
+              <div key={type} className="relative mb-6">
                 <div className="sticky top-0 z-10 bg-[#fafafa]">
                   <div className="flex items-center gap-2 py-2">
-                    {categoryIcons[category as keyof typeof categoryIcons]}
-                    <span className="text-sm font-semibold text-gray-190">{category}</span>
+                    {typeIcons[type as keyof typeof typeIcons]}
+                    <span className="text-sm font-semibold text-gray-190">{type}</span>
                     <span className="ml-1 text-gray-110 text-xs">
                       {results.length} results
                     </span>
@@ -998,8 +933,8 @@ const Sidebar = () => {
                     {results.map((result) => {
                       // Determine which tab to open in the library modal
                       const tabToOpen = 
-                        result.category === 'Core' ? 'core' :
-                        result.category === 'Connectors' ? 'connectors' : 'core';
+                        result.type === 'Core' ? 'core' :
+                        result.type === 'Connectors' ? 'connectors' : 'core';
                       
                       return (
                         <div
@@ -1011,20 +946,23 @@ const Sidebar = () => {
                           }}
                         >
                           <div className="flex gap-2 items-center">
-                            {result.category === 'Connectors' ? (
+                            {result.type === 'Connectors' ? (
                               <ConnectorLogo 
                                 name={result.name} 
-                                color="bg-white" 
-                                fallbackIcon={<ConnectorsIcon className="w-3 h-3 text-gray-110" />}
+                                size="small"
                               />
                             ) : (
-                                      <div className="p-1 rounded-md flex-shrink-0 flex items-center justify-center bg-[#f0f6ff] text-[#0078d4]" style={{ width: '24px', height: '24px' }}>
-                                {result.icon ? (
-                                  <result.icon className="w-4 h-4" />
-                                ) : (
-                                  <CoreIcon className="w-4 h-4" />
-                                )}
-                              </div>
+                              <ActionIcon 
+                                module={{
+                                  name: result.name,
+                                  icon: result.icon || CoreIcon,
+                                  color: result.color,
+                                  categoryName: result.category,
+                                  // Pass the original module if available for additional context
+                                  ...(result.module ? { category: result.module.category } : {})
+                                }}
+                                size="small"
+                              />
                             )}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1.5">
@@ -1042,7 +980,7 @@ const Sidebar = () => {
                                 )}
                               </div>
                               <p className="text-xs leading-tight text-gray-500 mt-0 truncate text-left">
-                                {result.module}
+                                {getModuleNameAsString(result.module)}
                                 {result.module && result.description && ' › '}
                                 {result.description}
                               </p>
@@ -1081,9 +1019,13 @@ const Sidebar = () => {
       groups = [...groups].sort((a, b) => a.name.localeCompare(b.name));
       
       // Additionally ensure that all modules within each category are also sorted alphabetically
+      // and add categoryName to each module for consistent color handling
       groups = groups.map(group => ({
         ...group,
-        modules: [...group.modules].sort((a, b) => a.name.localeCompare(b.name))
+        modules: [...group.modules].map(module => ({
+          ...module,
+          categoryName: group.name // Add the category name to each module
+        })).sort((a, b) => a.name.localeCompare(b.name))
       }));
     }
 
@@ -1168,15 +1110,15 @@ const Sidebar = () => {
                       onClick={() => setActiveSection(module)}
                     >
                       {activeNav === 'connectors' ? (
-                        <ConnectorIcon 
+                        <ConnectorLogo 
                           name={module.name} 
-                          color={module.color} 
-                          icon={module.icon} 
+                          size="small"
                         />
                       ) : (
-                        <div className={cn("p-1 rounded-md flex items-center justify-center", module.color)} style={{ width: '24px', height: '24px' }}>
-                          <module.icon className="w-4 h-4" />
-                        </div>
+                        <ActionIcon 
+                          module={module}
+                          size="small"
+                        />
                       )}
                       <span className="text-sm text-gray-150 flex-1 text-left">{module.name}</span>
                       <ChevronRight className="w-4 h-4 text-gray-130 ml-auto" />
@@ -1302,7 +1244,6 @@ const Sidebar = () => {
             /* Show original navigation when not searching */
             <>
               {mainNavItems.map((item) => {
-                const Icon = item.icon;
                 const isActive = activeNav === item.id;
                 
                 return (
@@ -1313,14 +1254,13 @@ const Sidebar = () => {
                       setActiveSection(null);
                     }}
                     className={cn(
-                      "flex items-center justify-center gap-1.5 px-2.5 h-7 rounded-full text-xs font-medium transition-all duration-200",
+                      "flex items-center justify-center px-2.5 h-7 rounded-full text-xs font-medium transition-all duration-200",
                       "border",
                       isActive 
                         ? "border-[#0078d4] bg-[#0078d4]/5 text-[#0078d4]" 
                         : "border-gray-40 text-gray-140 hover:border-gray-30 hover:bg-gray-20"
                     )}
                   >
-                    <Icon className="w-3.5 h-3.5" />
                     <span>{item.label}</span>
                   </button>
                 );
@@ -1338,7 +1278,7 @@ const Sidebar = () => {
               <button
                 onClick={() => setSearchActiveTab('local')}
                 className={cn(
-                  "flex items-center justify-center gap-1.5 px-2.5 h-7 rounded-full text-xs font-medium transition-all duration-200",
+                  "flex items-center justify-center px-2.5 h-7 rounded-full text-xs font-medium transition-all duration-200",
                   "border",
                   searchActiveTab === 'local' 
                     ? "border-[#0078d4] bg-[#0078d4]/5 text-[#0078d4]" 
@@ -1346,7 +1286,6 @@ const Sidebar = () => {
                 )}
                 aria-label="Show local search results"
               >
-                <Search className="w-3.5 h-3.5" />
                 <span>Local</span>
                 {filteredLocalResults.length > 0 && (
                   <span className="ml-1 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-gray-30 text-gray-110 text-xs">
@@ -1357,7 +1296,7 @@ const Sidebar = () => {
               <button
                 onClick={() => setSearchActiveTab('library')}
                 className={cn(
-                  "flex items-center justify-center gap-1.5 px-2.5 h-7 rounded-full text-xs font-medium transition-all duration-200",
+                  "flex items-center justify-center px-2.5 h-7 rounded-full text-xs font-medium transition-all duration-200",
                   "border",
                   searchActiveTab === 'library' 
                     ? "border-[#0078d4] bg-[#0078d4]/5 text-[#0078d4]" 
@@ -1365,7 +1304,6 @@ const Sidebar = () => {
                 )}
                 aria-label="Show library search results"
               >
-                <Package2 className="w-3.5 h-3.5" />
                 <span>Library</span>
                 {librarySearchResults.length > 0 && (
                   <span className="ml-1 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-gray-30 text-gray-110 text-xs">

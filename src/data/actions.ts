@@ -1,23 +1,23 @@
-import { Network, GitBranch, ArrowBigRightDash, Repeat, Variable, Globe, FileText, Bot, Mail, Table, Database, MessageSquare, Calendar, Users, CheckSquare, Github as BrandGithub, BarChart, Twitter, Slack, CreditCard, ShoppingCart, Video, Instagram, Linkedin, Youtube, Rss, MonitorSmartphone, MousePointer, Keyboard, Monitor, Settings, Terminal, Clipboard, MessageCircle, Files, FileJson, Clock, Folder, File as FilePdf, FileSpreadsheet, FileCode, FileImage, FileArchive, Link, Webhook, Apple as Api, Share2, Wrench, ListChecks, FileSpreadsheetIcon, FileTextIcon, BrainCircuit, DatabaseIcon, MailIcon, MailboxIcon, ServerIcon, CloudIcon, UsersIcon, Key, Eye, FileSearch, Lock, Command, Code, Terminal as TerminalIcon, FileSymlink as Xml, Network as FtpIcon, MessageSquare as MessageSquareCode, Cloud, Plug, HardDrive, MessageSquare as TeamsIcon, FileText as WordIcon, FormInput } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+// Import icon definitions from our centralized icon library
+import { CommonIcons, IconDefinition } from '../config/iconLibraries';
 
 export interface ActionSource {
   name: string;
-  icon: LucideIcon;
+  icon: IconDefinition;
   color: string;
   categories: ActionCategory[];
 }
 
 export interface ActionCategory {
   name: string;
-  icon: LucideIcon;
+  icon: IconDefinition;
   color: string;
   modules: ActionModule[];
 }
 
 export interface ActionModule {
   name: string;
-  icon: LucideIcon;
+  icon: IconDefinition;
   color: string;
   description?: string;
   submodules: ActionSubmodule[];
@@ -35,17 +35,17 @@ export interface ActionSubmodule {
 export const actionSources: ActionSource[] = [
   {
     name: 'PAD Action',
-    icon: Network,
+    icon: CommonIcons.web,
     color: 'bg-blue-100 text-blue-600',
     categories: [
       {
         name: 'Files',
-        icon: FileText,
+        icon: CommonIcons.file,
         color: 'bg-yellow-100 text-yellow-600',
         modules: [
           {
             name: 'Date time',
-            icon: Clock,
+            icon: CommonIcons.clock,
             color: 'bg-blue-100 text-blue-600',
             submodules: [
               {
@@ -60,7 +60,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Files',
-            icon: FileText,
+            icon: CommonIcons.fileText,
             color: 'bg-yellow-100 text-yellow-600',
             submodules: [
               {
@@ -88,7 +88,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Folders',
-            icon: Folder,
+            icon: CommonIcons.folder,
             color: 'bg-blue-100 text-blue-600',
             submodules: [
               {
@@ -110,7 +110,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'PDF',
-            icon: FileText,
+            icon: CommonIcons.filePdf,
             color: 'bg-red-100 text-red-600',
             submodules: [
               {
@@ -129,12 +129,12 @@ export const actionSources: ActionSource[] = [
       },
       {
         name: 'Interaction',
-        icon: MonitorSmartphone,
+        icon: CommonIcons.deviceDesktop,
         color: 'bg-rose-100 text-rose-600',
         modules: [
           {
             name: 'Browser Automation',
-            icon: Globe,
+            icon: CommonIcons.globe,
             color: 'bg-blue-100 text-blue-600',
             submodules: [
               {
@@ -161,7 +161,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'UI Automation',
-            icon: MonitorSmartphone,
+            icon: CommonIcons.monitorSmartphone,
             color: 'bg-rose-100 text-rose-600',
             submodules: [
               {
@@ -203,7 +203,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Message boxes',
-            icon: MessageSquare,
+            icon: CommonIcons.messageSquare,
             color: 'bg-indigo-100 text-indigo-600',
             submodules: [
               {
@@ -222,7 +222,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Mouse and keyboard',
-            icon: Keyboard,
+            icon: CommonIcons.keyboard,
             color: 'bg-slate-100 text-slate-600',
             submodules: [
               {
@@ -248,12 +248,12 @@ export const actionSources: ActionSource[] = [
       },
       {
         name: 'System',
-        icon: Settings,
+        icon: CommonIcons.settings,
         color: 'bg-slate-100 text-slate-600',
         modules: [
           {
             name: 'Clipboard',
-            icon: Clipboard,
+            icon: CommonIcons.clipboard,
             color: 'bg-amber-100 text-amber-600',
             submodules: [
               {
@@ -268,7 +268,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Workstation Control',
-            icon: Monitor,
+            icon: CommonIcons.monitor,
             color: 'bg-slate-100 text-slate-600',
             submodules: [
               {
@@ -293,7 +293,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Environment Settings',
-            icon: Settings,
+            icon: CommonIcons.settings,
             color: 'bg-emerald-100 text-emerald-600',
             submodules: [
               {
@@ -308,7 +308,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Process Management',
-            icon: Terminal,
+            icon: CommonIcons.terminal,
             color: 'bg-violet-100 text-violet-600',
             submodules: [
               {
@@ -327,12 +327,12 @@ export const actionSources: ActionSource[] = [
       },
       {
         name: 'Logic',
-        icon: Network,
+        icon: CommonIcons.network,
         color: 'bg-blue-100 text-blue-600',
         modules: [
           {
             name: 'Conditionals',
-            icon: Network,
+            icon: CommonIcons.network,
             color: 'bg-blue-100 text-blue-600',
             submodules: [
               {
@@ -350,7 +350,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Flow control',
-            icon: MessageSquareCode,
+            icon: CommonIcons.messageSquareCode,
             color: 'bg-purple-100 text-purple-600',
             submodules: [
               {
@@ -375,7 +375,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Loops',
-            icon: Repeat,
+            icon: CommonIcons.repeat,
             color: 'bg-green-100 text-green-600',
             submodules: [
               {
@@ -392,7 +392,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Variables',
-            icon: Variable,
+            icon: CommonIcons.variable,
             color: 'bg-indigo-100 text-indigo-600',
             submodules: [
               {
@@ -409,12 +409,12 @@ export const actionSources: ActionSource[] = [
       },
       {
         name: 'Advanced',
-        icon: Wrench,
+        icon: CommonIcons.wrench,
         color: 'bg-slate-100 text-slate-600',
         modules: [
           {
             name: 'Scripting',
-            icon: Code,
+            icon: CommonIcons.code,
             color: 'bg-purple-100 text-purple-600',
             submodules: [
               {
@@ -432,7 +432,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Cryptography',
-            icon: Lock,
+            icon: CommonIcons.lock,
             color: 'bg-green-100 text-green-600',
             submodules: [
               {
@@ -452,7 +452,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Windows services',
-            icon: Command,
+            icon: CommonIcons.command,
             color: 'bg-blue-100 text-blue-600',
             submodules: [
               {
@@ -470,7 +470,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'XML',
-            icon: Xml,
+            icon: CommonIcons.xml,
             color: 'bg-orange-100 text-orange-600',
             submodules: [
               {
@@ -492,7 +492,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'CMD session',
-            icon: TerminalIcon,
+            icon: CommonIcons.terminal,
             color: 'bg-gray-100 text-gray-600',
             submodules: [
               {
@@ -509,7 +509,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Terminal emulation',
-            icon: Terminal,
+            icon: CommonIcons.terminal,
             color: 'bg-slate-100 text-slate-600',
             submodules: [
               {
@@ -529,7 +529,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'FTP',
-            icon: FtpIcon,
+            icon: CommonIcons.ftp,
             color: 'bg-indigo-100 text-indigo-600',
             submodules: [
               {
@@ -558,12 +558,12 @@ export const actionSources: ActionSource[] = [
       },
       {
         name: 'Integration',
-        icon: Share2,
+        icon: CommonIcons.share,
         color: 'bg-purple-100 text-purple-600',
         modules: [
           {
             name: 'Access',
-            icon: Database,
+            icon: CommonIcons.database,
             color: 'bg-blue-100 text-blue-600',
             submodules: [
               {
@@ -580,7 +580,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Active Directory',
-            icon: Users,
+            icon: CommonIcons.users,
             color: 'bg-green-100 text-green-600',
             submodules: [
               {
@@ -617,7 +617,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'AI Builder',
-            icon: BrainCircuit,
+            icon: CommonIcons.brainCircuit,
             color: 'bg-indigo-100 text-indigo-600',
             submodules: [
               {
@@ -630,7 +630,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Azure',
-            icon: CloudIcon,
+            icon: CommonIcons.cloud,
             color: 'bg-blue-100 text-blue-600',
             submodules: [
               {
@@ -656,7 +656,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'CyberArk',
-            icon: Key,
+            icon: CommonIcons.key,
             color: 'bg-red-100 text-red-600',
             submodules: [
               {
@@ -669,7 +669,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Email',
-            icon: Mail,
+            icon: CommonIcons.mail,
             color: 'bg-amber-100 text-amber-600',
             submodules: [
               {
@@ -684,7 +684,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Excel',
-            icon: FileSpreadsheetIcon,
+            icon: CommonIcons.spreadsheet,
             color: 'bg-green-100 text-green-600',
             submodules: [
               {
@@ -740,7 +740,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Exchange Server',
-            icon: MailboxIcon,
+            icon: CommonIcons.mailbox,
             color: 'bg-blue-100 text-blue-600',
             submodules: [
               {
@@ -756,7 +756,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Google Cognitive',
-            icon: Eye,
+            icon: CommonIcons.eye,
             color: 'bg-red-100 text-red-600',
             submodules: [
               {
@@ -782,7 +782,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Microsoft Cognitive',
-            icon: BrainCircuit,
+            icon: CommonIcons.brainCircuit,
             color: 'bg-purple-100 text-purple-600',
             submodules: [
               {
@@ -810,7 +810,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Outlook',
-            icon: MailIcon,
+            icon: CommonIcons.mail,
             color: 'bg-blue-100 text-blue-600',
             submodules: [
               {
@@ -829,7 +829,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'SQL',
-            icon: DatabaseIcon,
+            icon: CommonIcons.database,
             color: 'bg-amber-100 text-amber-600',
             submodules: [
               {
@@ -844,7 +844,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Work queues',
-            icon: ListChecks,
+            icon: CommonIcons.clipboard,
             color: 'bg-indigo-100 text-indigo-600',
             submodules: [
               {
@@ -867,17 +867,17 @@ export const actionSources: ActionSource[] = [
   },
   {
     name: 'Connector',
-    icon: Plug,
+    icon: CommonIcons.server,
     color: 'bg-purple-100 text-purple-600',
     categories: [
       {
         name: 'Azure',
-        icon: Cloud,
+        icon: CommonIcons.cloud,
         color: 'bg-blue-100 text-blue-600',
         modules: [
           {
             name: 'Azure Blob Storage',
-            icon: Database,
+            icon: CommonIcons.database,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Azure Blob Storage to manage your blobs and containers',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/azureblob/',
@@ -912,7 +912,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'SQL Server',
-            icon: Database,
+            icon: CommonIcons.database,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to SQL Server to manage your databases and execute queries',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/sql/',
@@ -936,7 +936,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Azure Key Vault',
-            icon: Lock,
+            icon: CommonIcons.lock,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Azure Key Vault to manage your secrets, keys, and certificates',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/keyvault/',
@@ -979,7 +979,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Azure OpenAI',
-            icon: BrainCircuit,
+            icon: CommonIcons.brainCircuit,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Azure OpenAI to generate text, images, and embeddings',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/azureopenai/',
@@ -1009,12 +1009,12 @@ export const actionSources: ActionSource[] = [
       },
       {
         name: 'Microsoft 365',
-        icon: Cloud,
+        icon: CommonIcons.cloud,
         color: 'bg-blue-100 text-blue-600',
         modules: [
           {
             name: 'SharePoint',
-            icon: FileText,
+            icon: CommonIcons.fileText,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to SharePoint Online to manage files, lists, and libraries',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/sharepointonline/',
@@ -1091,7 +1091,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Office 365 Outlook',
-            icon: Mail,
+            icon: CommonIcons.mail,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Office 365 Outlook for email, calendar, and contact management',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/office365/',
@@ -1156,7 +1156,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Excel Online (Business)',
-            icon: FileSpreadsheet,
+            icon: CommonIcons.spreadsheet,
             color: 'bg-green-100 text-green-600',
             description: 'Connect to Excel Online (Business) to manage workbooks, tables, and worksheets',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/excelonlinebusiness/',
@@ -1195,7 +1195,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'OneDrive for Business',
-            icon: HardDrive,
+            icon: CommonIcons.hardDrive,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to OneDrive for Business to manage files and folders',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/onedriveforbusiness/',
@@ -1249,7 +1249,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Microsoft Teams',
-            icon: TeamsIcon,
+            icon: CommonIcons.teams,
             color: 'bg-purple-100 text-purple-600',
             description: 'Connect to Microsoft Teams to manage teams, channels, chats, and messages',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/teams/',
@@ -1319,7 +1319,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Word Online (Business)',
-            icon: WordIcon,
+            icon: CommonIcons.word,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Word Online (Business) to work with Word documents',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/wordonlinebusiness/',
@@ -1338,7 +1338,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Microsoft Forms',
-            icon: FormInput,
+            icon: CommonIcons.form,
             color: 'bg-purple-100 text-purple-600',
             description: 'Connect to Microsoft Forms to manage form responses',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/microsoftforms/',
@@ -1356,7 +1356,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Planner',
-            icon: CheckSquare,
+            icon: CommonIcons.clipboard,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Microsoft Planner to create and manage tasks and plans',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/planner/',
@@ -1393,7 +1393,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Power BI',
-            icon: BarChart,
+            icon: CommonIcons.chart,
             color: 'bg-yellow-100 text-yellow-600',
             description: 'Connect to Power BI to manage and interact with your reports and dashboards',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/powerbi/',
@@ -1433,7 +1433,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Microsoft To Do',
-            icon: CheckSquare,
+            icon: CommonIcons.clipboard,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Microsoft To Do to create and manage your tasks and lists',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/todo/',
@@ -1466,7 +1466,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'OneNote',
-            icon: FileText,
+            icon: CommonIcons.fileText,
             color: 'bg-purple-100 text-purple-600',
             description: 'Connect to OneNote to create and manage your notebooks, sections, and pages',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/onenote/',
@@ -1511,12 +1511,12 @@ export const actionSources: ActionSource[] = [
       },
       {
         name: 'Third-Party Services',
-        icon: Plug,
+        icon: CommonIcons.server,
         color: 'bg-purple-100 text-purple-600',
         modules: [
           {
             name: 'Adobe Sign',
-            icon: FileText,
+            icon: CommonIcons.fileText,
             color: 'bg-red-100 text-red-600',
             description: 'Connect to Adobe Sign to create, send, and manage agreements for e-signatures',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/adobesign/',
@@ -1557,7 +1557,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Adobe PDF Tools',
-            icon: FilePdf,
+            icon: CommonIcons.filePdf,
             color: 'bg-red-100 text-red-600',
             description: 'Connect to Adobe PDF Tools to create, manipulate, and extract content from PDF documents',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/adobepdftools/',
@@ -1592,7 +1592,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Azure DevOps',
-            icon: Code,
+            icon: CommonIcons.code,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Azure DevOps to manage work items, builds, and repositories',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/visualstudioteamservices/',
@@ -1637,7 +1637,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Bing Maps',
-            icon: Globe,
+            icon: CommonIcons.globe,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Bing Maps to get location information, calculate routes, and find points of interest',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/bingmaps/',
@@ -1675,7 +1675,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Bitly',
-            icon: Link,
+            icon: CommonIcons.linkIcon,
             color: 'bg-orange-100 text-orange-600',
             description: 'Connect to Bitly to create and manage shortened URLs',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/bitly/',
@@ -1709,7 +1709,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Box',
-            icon: Folder,
+            icon: CommonIcons.folder,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Box to manage files and folders in your Box account',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/box/',
@@ -1756,7 +1756,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Dropbox',
-            icon: HardDrive,
+            icon: CommonIcons.hardDrive,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Dropbox to manage files and folders in your Dropbox account',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/dropbox/',
@@ -1801,7 +1801,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'GitHub',
-            icon: GitBranch,
+            icon: CommonIcons.git,
             color: 'bg-gray-100 text-gray-600',
             description: 'Connect to GitHub to manage repositories, issues, and pull requests',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/github/',
@@ -1859,7 +1859,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Jira',
-            icon: ListChecks,
+            icon: CommonIcons.clipboard,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Jira to manage issues, projects, and workflows',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/jira/',
@@ -1913,7 +1913,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Salesforce',
-            icon: Cloud,
+            icon: CommonIcons.cloud,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to Salesforce to manage customer data, leads, opportunities, and more',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/salesforce/',
@@ -1979,7 +1979,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Google Calendar',
-            icon: Calendar,
+            icon: CommonIcons.calendar,
             color: 'bg-red-100 text-red-600',
             description: 'Connect to Google Calendar to manage events, calendars, and attendees',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/googlecalendar/',
@@ -2031,7 +2031,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Google Drive',
-            icon: HardDrive,
+            icon: CommonIcons.hardDrive,
             color: 'bg-green-100 text-green-600',
             description: 'Connect to Google Drive to manage files and folders in your Google Drive account',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/googledrive/',
@@ -2091,7 +2091,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Google Sheets',
-            icon: FileSpreadsheet,
+            icon: CommonIcons.spreadsheet,
             color: 'bg-green-100 text-green-600',
             description: 'Connect to Google Sheets to manage spreadsheets, worksheets, and data',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/googlesheets/',
@@ -2146,7 +2146,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'Google Tasks',
-            icon: CheckSquare,
+            icon: CommonIcons.clipboard,
             color: 'bg-green-100 text-green-600',
             description: 'Connect to Google Tasks to manage tasks and task lists',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/googletasks/',
@@ -2181,7 +2181,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'LinkedIn',
-            icon: Linkedin,
+            icon: CommonIcons.linkedinIcon,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to LinkedIn to manage your professional network, share content, and engage with your audience',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/linkedinv2/',
@@ -2235,7 +2235,7 @@ export const actionSources: ActionSource[] = [
           },
           {
             name: 'SAP',
-            icon: Database,
+            icon: CommonIcons.database,
             color: 'bg-blue-100 text-blue-600',
             description: 'Connect to SAP to manage business processes, data, and integrations',
             documentationUrl: 'https://learn.microsoft.com/en-us/connectors/sap/',

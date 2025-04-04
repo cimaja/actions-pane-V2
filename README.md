@@ -8,6 +8,16 @@ Alternative design prototype for the Power Automate Desktop actions pane. Test i
 - **Styling** with Tailwind CSS
 - **TypeScript** for type safety
 
+## What's New
+
+### April 2025
+
+- **Icon System Overhaul**: Replaced all Lucide icons with Fluent UI icons for a consistent visual experience
+  - Implemented a centralized icon mapping system through `CommonIcons` in `iconLibraries.ts`
+  - Updated all action icons in `actions.ts` to use the new Fluent icon system
+  - Removed dependencies on `lucide-react` for core actions
+- **Improved Maintainability**: Simplified icon management by using a single icon library throughout the application
+
 ## Dependencies
 
 Major dependencies include:
